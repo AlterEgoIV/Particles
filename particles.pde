@@ -1,41 +1,24 @@
-ArrayList<ParticleGenerator> particleGenerators;
-int numGenerators = 10;
+private ArrayList<ParticleGenerator> particleGenerators;
 
 void setup()
 {
   size(800, 600);
   
   particleGenerators = new ArrayList<ParticleGenerator>();
-  
-//  for(int i = 0; i <= numGenerators; ++i)
-//  {
-//    particleGenerators.add(new ParticleGenerator(
-//    new PVector(i * (width / numGenerators), 0), 
-//    new PVector(2, 2),
-//    200,
-//    5, 
-//    5, 
-//    color(255)
-//    ));
-//  }
-  
-  particleGenerators.add(new ParticleGenerator(
-                         new PVector(width / 2, 0), 
-                         new PVector(2, .5),
-                         10, 
-                         10, 
-                         color(255)));
+  particleGenerators.add(new VortexParticleGenerator(new PVector(width / 2, height / 2), 60));
 }
 
 void draw()
 {
-  background(200);
+  background(51);
   
-  for(ParticleGenerator pG : particleGenerators)
+  for(ParticleGenerator particleGenerator : particleGenerators)
   {
-    pG.update();
-    pG.render();
+    particleGenerator.update();
   }
   
-  //println(frameRate);
+  for(ParticleGenerator particleGenerator : particleGenerators)
+  {
+    particleGenerator.render();
+  }
 }

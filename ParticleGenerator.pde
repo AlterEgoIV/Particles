@@ -1,70 +1,48 @@
-class ParticleGenerator
+public abstract class ParticleGenerator extends Entity
 {
-  PVector pos, pVel, pMaxDisplacement;
-  ArrayList<Particle> particles, inactiveParticles;
-  int pW, pH, spawnRate;
-  color pCol;
+  private ArrayList<Particle> activeParticles, inactiveParticles;
+  private int delay;
   
-  ParticleGenerator(PVector pos, PVector pVel, int pW, int pH, color pCol)
+  public ParticleGenerator(PVector position, int delay)
   {
-    this.pos = pos;
-    this.pVel = pVel;
-    this.pW = pW;
-    this.pH = pH;
-    this.pCol = pCol;
-    //this.maxParticles = maxParticles >= 1 ? maxParticles : 1;
+    super(position);
     
-    spawnRate = 20;
-    particles = new ArrayList<Particle>();
+    activeParticles = new ArrayList<Particle>();
     inactiveParticles = new ArrayList<Particle>();
+    this.delay = delay;
   }
   
-  void update()
+  @Override
+  public void update()
   {
-    println("Active particles: " + particles.size());
-    println("Inactive particles: " + inactiveParticles.size());
-    
-    if(frameCount % spawnRate == 0)
+    if(createNewParticle())
     {
-      if(inactiveParticles.size() >= 1)
-      {
-        Particle p = inactiveParticles.get(0);
-        
-        p.pos.x = this.pos.x;
-        p.pos.y = this.pos.y;
-        p.lifespan = p.startingLifespan;
-        p.isActive = true;
-        
-        particles.add(p);
-        inactiveParticles.remove(p);
-      }
-      else
-      {
-        println("New particle created");
-        particles.add(new Particle(new PVector(pos.x, pos.y), pVel, pW, pH, color(random(256), random(256), random(256))));
-        //++numParticles;
-      }
+      Particle particle = new CircleParticle(this.position.copy(), 10, 10);
+      activeParticles.add(particle);
     }
     
-    for(int i = particles.size() - 1; i >= 0; --i)
+    updateParticles();
+  }
+  
+  private void updateParticles()
+  {
+    for(Particle particle : activeParticles)
     {
-      Particle p = particles.get(i);
-      
-      p.update();
-      
-      if(!p.isActive)
-      {
-        inactiveParticles.add(p);
-        particles.remove(p);
-      }
+      particle.update();
     }
   }
   
-  void render()
+  private boolean createNewParticle()
   {
-    for(Particle p : particles)
+    return (frameCount % delay == 0) && (inactiveParticles.size() == 0);
+  }
+  
+  @Override
+  public void render()
+  {
+    for(Particle particle : activeParticles)
     {
-      p.render();
+      particle.render();
     }
   }
 }

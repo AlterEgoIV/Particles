@@ -1,48 +1,54 @@
-class Particle
+public abstract class Particle extends Entity
 {
-  PVector pos, vel;
-  int w, h, lifespan, startingLifespan;
-  color c;
-  boolean isActive;
-  float oscillationSpeed;
+  protected PVector velocity;
+  protected int w, h, life;
+  protected boolean isActive;
+  protected color colour;
   
-  Particle(PVector pos, PVector vel, int w, int h, color c)
+  public Particle(PVector position, int w, int h)
   {
-    this.pos = pos;
-    this.vel = vel;
-    this.h = h;
-    this.w = w;
-    this.c = c;
-    
-    oscillationSpeed = 0;
-    startingLifespan = 2048;
-    lifespan = startingLifespan;
-    isActive = true;
+    super(position);
+    init(position, w, h, color(255));
   }
   
-  void update()
+  public Particle(PVector position, int w, int h, color colour)
   {
-    pos.x += vel.x * random(-1, 1);
-    pos.y += vel.y * random(0, 1);
-
-//    oscillationSpeed += .1;
-//
-//    pos.x += sin(oscillationSpeed) * vel.x;
-//    pos.y += vel.y;
+    super(position);
+    init(position, w, h, colour);
+  }
+  
+  public void init(PVector position, int w, int h, color colour)
+  {
+    this.w = w;
+    this.h = h;
+    this.velocity = new PVector(random(-1, 1), random(-1, 1));
+    this.isActive = true;
+    this.colour = colour;
+  }
+  
+  @Override
+  public void update()
+  {
+    position.add(velocity);
     
-    --lifespan;
-    
-    if(lifespan == 0)
+    age();
+  }
+  
+  private void age()
+  {
+    if(life-- == 0)
     {
-      isActive = false;
+      setActive(false);
     }
   }
   
-  void render()
+  public void setColour(color colour)
   {
-    noStroke();
-    //stroke(c);
-    fill(c, lifespan);
-    ellipse(pos.x, pos.y, w, h);
+    this.colour = colour;
+  }
+  
+  public void setActive(boolean isActive)
+  {
+    this.isActive = isActive;
   }
 }
