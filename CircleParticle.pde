@@ -8,7 +8,7 @@ public class CircleParticle extends Particle
   @Override
   public void render()
   {
-    fill(colour);
+    fill(life);
     ellipse(position.x, position.y, w, h);
   }
 }

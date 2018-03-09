@@ -1,15 +1,17 @@
 public abstract class ParticleGenerator extends Entity
 {
   private ArrayList<Particle> activeParticles, inactiveParticles;
-  private int delay;
+  private int spawnDelay, particleWidth, particleHeight;
   
-  public ParticleGenerator(PVector position, int delay)
+  public ParticleGenerator(PVector position, int spawnDelay)
   {
     super(position);
     
     activeParticles = new ArrayList<Particle>();
     inactiveParticles = new ArrayList<Particle>();
-    this.delay = delay;
+    this.spawnDelay = spawnDelay;
+    this.particleWidth = 10;
+    this.particleHeight = 10;
   }
   
   @Override
@@ -17,9 +19,12 @@ public abstract class ParticleGenerator extends Entity
   {
     if(createNewParticle())
     {
-      Particle particle = new CircleParticle(this.position.copy(), 10, 10);
+      Particle particle = new CircleParticle(this.position.copy(), particleWidth, particleHeight);
       activeParticles.add(particle);
     }
+    
+    //Particle particle = new CircleParticle(this.position.copy(), particleWidth, particleHeight);
+    //activeParticles.add(particle);
     
     updateParticles();
   }
@@ -34,7 +39,7 @@ public abstract class ParticleGenerator extends Entity
   
   private boolean createNewParticle()
   {
-    return (frameCount % delay == 0) && (inactiveParticles.size() == 0);
+    return (frameCount % spawnDelay == 0) && (inactiveParticles.size() == 0);
   }
   
   @Override
